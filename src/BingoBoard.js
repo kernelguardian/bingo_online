@@ -1,18 +1,49 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 
-function BingoBoard() {
-	const location = useLocation();
-	const params = new URLSearchParams(location.search);
-
-	const maxNumberRange = parseInt(params.get('maxNumberRange')) || 75;
-	const numberOfCells = parseInt(params.get('numberOfCells')) || 5;
-
+const BingoBoard = () => {
+	const { id } = useParams(); // Access the dynamic parameter
+	const [maxNumberRange, setMaxNumberRange] = useState(75);
+	const [numberOfCells, setNumberOfCells] = useState(5);
 	const [username, setUsername] = useState('');
 	const [showModal, setShowModal] = useState(true); // Modal is shown when the page loads
+	const [bingoNumbers, setBingoNumbers] = useState([]);
+	const [clickedCells, setClickedCells] = useState([]);
 
-	// Generate unique bingo numbers only once when the component is first rendered
-	const generateBingoNumbers = () => {
+	// Fetch configuration data from Redis on component mount
+	useEffect(() => {
+		const fetchData = async () => {
+			const redisUrl = `${process.env.REACT_APP_KV_REST_API_URL}/get/${id}`;
+			console.log('Fetching from:', redisUrl);
+
+			try {
+				const response = await fetch(redisUrl, {
+					headers: {
+						Authorization: `Bearer ${process.env.REACT_APP_KV_REST_API_TOKEN}`,
+					},
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+
+				const data = await response.json();
+				console.log('Fetched data:', data);
+
+				const [maxRange, numCells] = data['result'].split('_');
+				setMaxNumberRange(parseInt(maxRange, 10) || 75);
+				setNumberOfCells(parseInt(numCells, 10) || 5);
+			} catch (error) {
+				console.error('Error fetching data:', error);
+				// Optionally, you can set default values or show an error message
+			}
+		};
+
+		fetchData();
+	}, [id]); // Fetch data when the component mounts or id changes
+
+	// Generate bingo numbers based on the number of cells
+	const generateBingoNumbers = useCallback(() => {
 		let numbers = [];
 		while (numbers.length < numberOfCells * numberOfCells) {
 			let randNum = Math.floor(Math.random() * maxNumberRange) + 1;
@@ -20,13 +51,13 @@ function BingoBoard() {
 				numbers.push(randNum);
 			}
 		}
-		return numbers;
-	};
+		setBingoNumbers(numbers);
+		setClickedCells(Array(numberOfCells * numberOfCells).fill(false));
+	}, [maxNumberRange, numberOfCells]);
 
-	const [bingoNumbers] = useState(generateBingoNumbers); // Bingo numbers remain fixed
-	const [clickedCells, setClickedCells] = useState(
-		Array(numberOfCells * numberOfCells).fill(false)
-	);
+	useEffect(() => {
+		generateBingoNumbers();
+	}, [generateBingoNumbers]); // Regenerate bingo numbers when maxNumberRange or numberOfCells changes
 
 	// Function to handle username submission
 	const handleUsernameSubmit = (e) => {
@@ -103,6 +134,6 @@ function BingoBoard() {
 			</div>
 		</div>
 	);
-}
+};
 
 export default BingoBoard;

@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateUniqueId } from './utils';
+// import { createClient } from 'redis';
 
 function Home() {
+	// const redis = createClient();
+	// redis.on('error', (err) => console.log('Redis Client Error', err));
+	// redis.connect();
+	// console.log(process.env.REACT_APP_KV_URL);
+
 	const [maxNumberRange, setMaxNumberRange] = useState(75);
 	const [numberOfCells, setNumberOfCells] = useState(5);
 	const navigate = useNavigate();
 
 	const handleGenerate = () => {
-		const url = `/bingo?maxNumberRange=${maxNumberRange}&numberOfCells=${numberOfCells}`;
+		const uid = generateUniqueId();
+
+		const url = `/bingo/${uid}`;
+		const payload = maxNumberRange + '_' + numberOfCells;
+		const redis_url = `${process.env.REACT_APP_KV_REST_API_URL}/set/${uid}/${payload}`;
+
+		console.log(redis_url);
+
+		fetch(redis_url, {
+			headers: {
+				Authorization: 'Bearer ' + process.env.REACT_APP_KV_REST_API_TOKEN,
+			},
+		})
+			.then((response) => response.json())
+			.then((data) => console.log(data));
+
 		navigate(url);
 	};
 
