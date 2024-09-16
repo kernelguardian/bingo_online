@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-// Test
+
 const BingoBoard = () => {
 	const { id } = useParams(); // Access the dynamic parameter
 	const [maxNumberRange, setMaxNumberRange] = useState(75);
@@ -9,6 +9,9 @@ const BingoBoard = () => {
 	const [showModal, setShowModal] = useState(true); // Modal is shown when the page loads
 	const [bingoNumbers, setBingoNumbers] = useState([]);
 	const [clickedCells, setClickedCells] = useState([]);
+	const [completedRows, setCompletedRows] = useState(0);
+	const [completedColumns, setCompletedColumns] = useState(0);
+	const [completedDiagonals, setCompletedDiagonals] = useState(0);
 
 	// Fetch configuration data from Redis on component mount
 	useEffect(() => {
@@ -72,6 +75,44 @@ const BingoBoard = () => {
 		const updatedClickedCells = [...clickedCells];
 		updatedClickedCells[index] = !updatedClickedCells[index];
 		setClickedCells(updatedClickedCells);
+		checkCompletedLines(updatedClickedCells);
+	};
+
+	// Check completed lines
+	const checkCompletedLines = (cells) => {
+		let rowCount = 0;
+		let colCount = 0;
+		let diagCount1 = 0;
+		let diagCount2 = 0;
+
+		for (let row = 0; row < numberOfCells; row++) {
+			let allRowSelected = true;
+			let allColSelected = true;
+
+			for (let col = 0; col < numberOfCells; col++) {
+				if (!cells[row * numberOfCells + col]) {
+					allRowSelected = false;
+				}
+				if (!cells[col * numberOfCells + row]) {
+					allColSelected = false;
+				}
+			}
+
+			if (allRowSelected) rowCount++;
+			if (allColSelected) colCount++;
+		}
+
+		for (let i = 0; i < numberOfCells; i++) {
+			if (cells[i * numberOfCells + i]) diagCount1++;
+			if (cells[(numberOfCells - 1 - i) * numberOfCells + i]) diagCount2++;
+		}
+
+		setCompletedRows(rowCount);
+		setCompletedColumns(colCount);
+		setCompletedDiagonals(
+			(diagCount1 === numberOfCells ? 1 : 0) +
+				(diagCount2 === numberOfCells ? 1 : 0)
+		);
 	};
 
 	return (
@@ -131,6 +172,14 @@ const BingoBoard = () => {
 							{number}
 						</div>
 					))}
+				</div>
+
+				{/* Display completed lines */}
+				<div className='mt-6 text-center'>
+					<p>Counter {completedRows + completedColumns + completedDiagonals}</p>
+					{/* <p className='text-lg'>Completed Rows: {completedRows}</p>
+					<p className='text-lg'>Completed Columns: {completedColumns}</p>
+					<p className='text-lg'>Completed Diagonals: {completedDiagonals}</p> */}
 				</div>
 			</div>
 		</div>
