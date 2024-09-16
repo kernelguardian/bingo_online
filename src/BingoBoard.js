@@ -128,15 +128,6 @@ const BingoBoard = () => {
 
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center relative'>
-			{/* Player Name Display in Top Left */}
-			{username && (
-				<div className='absolute top-4 left-4 bg-white p-2 rounded-lg shadow-lg z-50'>
-					<h2 className='text-lg font-bold text-gray-800'>
-						Player: {username}
-					</h2>
-				</div>
-			)}
-
 			{/* Username Modal */}
 			{showModal && (
 				<div className='absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50'>
@@ -167,7 +158,14 @@ const BingoBoard = () => {
 			)}
 
 			{/* Bingo Game */}
-			<div className='bg-white shadow-md rounded-lg p-8'>
+			<div className='bg-white shadow-md rounded-lg p-8 relative'>
+				{/* Player Name at the Top Left of the Card */}
+				{username && (
+					<h2 className='absolute top-4 left-8 text-lg font-semibold text-gray-800'>
+						{username}
+					</h2>
+				)}
+
 				<h1 className='text-2xl font-bold mb-6 text-center'>Bingo Board</h1>
 
 				{/* Bingo Header */}
