@@ -18,13 +18,13 @@ function Home() {
 
 		const url = `/bingo/${uid}`;
 		const payload = maxNumberRange + '_' + numberOfCells;
-		const redis_url = `${process.env.KV_REST_API_URL}/set/${uid}/${payload}`;
+		const redis_url = `${process.env.REACT_APP_KV_REST_API_URL}/set/${uid}/${payload}`;
 
 		console.log(redis_url);
 
 		fetch(redis_url, {
 			headers: {
-				Authorization: 'Bearer ' + process.env.KV_REST_API_TOKEN,
+				Authorization: 'Bearer ' + process.env.REACT_APP_KV_REST_API_TOKEN,
 			},
 		})
 			.then((response) => response.json())

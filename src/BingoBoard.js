@@ -13,13 +13,13 @@ const BingoBoard = () => {
 	// Fetch configuration data from Redis on component mount
 	useEffect(() => {
 		const fetchData = async () => {
-			const redisUrl = `${process.env.KV_REST_API_URL}/get/${id}`;
+			const redisUrl = `${process.env.REACT_APP_KV_REST_API_URL}/get/${id}`;
 			console.log('Fetching from:', redisUrl);
 
 			try {
 				const response = await fetch(redisUrl, {
 					headers: {
-						Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+						Authorization: `Bearer ${process.env.REACT_APP_KV_REST_API_TOKEN}`,
 					},
 				});
 
@@ -76,6 +76,7 @@ const BingoBoard = () => {
 
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center relative'>
+			{console.log(clickedCells)}
 			{/* Username Modal */}
 			{showModal && (
 				<div className='absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50'>
