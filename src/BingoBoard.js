@@ -178,7 +178,7 @@ const BingoBoard = () => {
 							key={index}
 							className={`flex items-center justify-center h-16 w-16  text-gray-800 text-4xl border font-bold  border-gray-400 rounded-md ${
 								index < completedDiagonals + completedRows + completedColumns
-									? 'line-through bg-green-500 shadow-lg shadow-green-500/50 text-white'
+									? 'line-through [text-decoration-color:orange] bg-green-500 shadow-lg shadow-green-500/50 text-white'
 									: ''
 							}`}
 						>
