@@ -115,6 +115,11 @@ const BingoBoard = () => {
 		);
 	};
 
+	// Function to start a new game
+	const startNewGame = () => {
+		window.location.reload();
+	};
+
 	// Generate headers for the Bingo board
 	const getHeaders = () => {
 		const headers = ['B', 'I', 'N', 'G', 'O'];
@@ -166,6 +171,16 @@ const BingoBoard = () => {
 					</h2>
 				)}
 
+				{/* Conditional New Game Button */}
+				{completedDiagonals + completedRows + completedColumns ===
+					numberOfCells && (
+					<div>
+						<h2 className='absolute top-4 right-8 text-lg font-semibold text-gray-800'>
+							WINNER!!!!!
+						</h2>
+					</div>
+				)}
+
 				<h1 className='text-2xl font-bold mb-6 text-center'>Bingo Board</h1>
 
 				{/* Bingo Header */}
@@ -206,6 +221,19 @@ const BingoBoard = () => {
 							{number}
 						</div>
 					))}
+				</div>
+
+				<div className='flex justify-center pt-5'>
+					{/* Conditional New Game Button */}
+					{completedDiagonals + completedRows + completedColumns ===
+						numberOfCells && (
+						<button
+							onClick={startNewGame}
+							className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'
+						>
+							New Game
+						</button>
+					)}
 				</div>
 			</div>
 		</div>
