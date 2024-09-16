@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-
+// Test
 const BingoBoard = () => {
 	const { id } = useParams(); // Access the dynamic parameter
 	const [maxNumberRange, setMaxNumberRange] = useState(75);
