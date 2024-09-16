@@ -31,14 +31,14 @@ const BingoBoard = () => {
 				}
 
 				const data = await response.json();
-				console.log('Fetched data:', data);
-
+				console.log('Data:', data);
 				const [maxRange, numCells] = data['result'].split('_');
-				setMaxNumberRange(parseInt(maxRange, 10) || 75);
+				setMaxNumberRange(parseInt(maxRange, 10) || 50);
 				setNumberOfCells(parseInt(numCells, 10) || 5);
 			} catch (error) {
 				console.error('Error fetching data:', error);
-				// Optionally, you can set default values or show an error message
+				setMaxNumberRange(50);
+				setNumberOfCells(5);
 			}
 		};
 
@@ -115,9 +115,20 @@ const BingoBoard = () => {
 		);
 	};
 
+	// Generate headers for the Bingo board
+	const getHeaders = () => {
+		const headers = ['B', 'I', 'N', 'G', 'O'];
+		while (headers.length < numberOfCells) {
+			headers.push('O');
+		}
+		return headers;
+	};
+
+	const headers = getHeaders();
+	const totalCompleted = completedDiagonals + completedRows + completedColumns;
+
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center relative'>
-			{console.log(clickedCells)}
 			{/* Username Modal */}
 			{showModal && (
 				<div className='absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50'>
@@ -155,6 +166,27 @@ const BingoBoard = () => {
 					<h2 className='text-xl mb-4 text-center'>Player: {username}</h2>
 				)}
 
+				{/* Bingo Header */}
+				<div
+					className={`grid grid-cols-${numberOfCells} gap-4 mb-4`}
+					style={{
+						gridTemplateColumns: `repeat(${numberOfCells}, minmax(0, 1fr))`,
+					}}
+				>
+					{headers.map((header, index) => (
+						<div
+							key={index}
+							className={`flex items-center justify-center h-16 w-16 bg-gray-300 text-gray-800  text-xl border font-bold border-gray-300 rounded-md ${
+								index < completedDiagonals + completedRows + completedColumns
+									? 'line-through'
+									: ''
+							}`}
+						>
+							{header}
+						</div>
+					))}
+				</div>
+
 				<div
 					className={`grid grid-cols-${numberOfCells} gap-4`}
 					style={{
@@ -172,14 +204,6 @@ const BingoBoard = () => {
 							{number}
 						</div>
 					))}
-				</div>
-
-				{/* Display completed lines */}
-				<div className='mt-6 text-center'>
-					<p>Counter {completedRows + completedColumns + completedDiagonals}</p>
-					{/* <p className='text-lg'>Completed Rows: {completedRows}</p>
-					<p className='text-lg'>Completed Columns: {completedColumns}</p>
-					<p className='text-lg'>Completed Diagonals: {completedDiagonals}</p> */}
 				</div>
 			</div>
 		</div>
