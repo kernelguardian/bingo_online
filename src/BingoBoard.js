@@ -176,9 +176,9 @@ const BingoBoard = () => {
 					{headers.map((header, index) => (
 						<div
 							key={index}
-							className={`flex items-center justify-center h-16 w-16 bg-gray-300 text-gray-800  text-xl border font-bold border-gray-300 rounded-md ${
+							className={`flex items-center justify-center h-16 w-16  text-gray-800 text-4xl border font-bold  border-gray-400 rounded-md ${
 								index < completedDiagonals + completedRows + completedColumns
-									? 'line-through'
+									? 'line-through bg-green-500 shadow-lg shadow-green-500/50 text-white'
 									: ''
 							}`}
 						>
