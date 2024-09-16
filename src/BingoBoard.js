@@ -125,7 +125,6 @@ const BingoBoard = () => {
 	};
 
 	const headers = getHeaders();
-	const totalCompleted = completedDiagonals + completedRows + completedColumns;
 
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center relative'>
