@@ -128,6 +128,15 @@ const BingoBoard = () => {
 
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center relative'>
+			{/* Player Name Display in Top Left */}
+			{username && (
+				<div className='absolute top-4 left-4 bg-white p-2 rounded-lg shadow-lg z-50'>
+					<h2 className='text-lg font-bold text-gray-800'>
+						Player: {username}
+					</h2>
+				</div>
+			)}
+
 			{/* Username Modal */}
 			{showModal && (
 				<div className='absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50'>
@@ -160,10 +169,6 @@ const BingoBoard = () => {
 			{/* Bingo Game */}
 			<div className='bg-white shadow-md rounded-lg p-8'>
 				<h1 className='text-2xl font-bold mb-6 text-center'>Bingo Board</h1>
-				{/* Display Username */}
-				{username && (
-					<h2 className='text-xl mb-4 text-center'>Player: {username}</h2>
-				)}
 
 				{/* Bingo Header */}
 				<div
@@ -197,7 +202,7 @@ const BingoBoard = () => {
 							key={index}
 							onClick={() => handleCellClick(index)}
 							className={`flex items-center justify-center h-16 w-16 bg-indigo-200 text-indigo-800 font-semibold text-xl border border-gray-300 rounded-md shadow cursor-pointer transition-transform transform ${
-								clickedCells[index] ? 'bg-red-300 line-through' : ''
+								clickedCells[index] ? 'bg-yellow-300 line-through' : ''
 							}`}
 						>
 							{number}
