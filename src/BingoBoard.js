@@ -13,13 +13,13 @@ const BingoBoard = () => {
 	// Fetch configuration data from Redis on component mount
 	useEffect(() => {
 		const fetchData = async () => {
-			const redisUrl = `${process.env.REACT_APP_KV_REST_API_URL}/get/${id}`;
+			const redisUrl = `${process.env.KV_REST_API_URL}/get/${id}`;
 			console.log('Fetching from:', redisUrl);
 
 			try {
 				const response = await fetch(redisUrl, {
 					headers: {
-						Authorization: `Bearer ${process.env.REACT_APP_KV_REST_API_TOKEN}`,
+						Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
 					},
 				});
 
