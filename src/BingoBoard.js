@@ -19,6 +19,7 @@ const BingoBoard = () => {
 		const storedUsername = Cookies.get('username'); // Get username from cookie
 		if (storedUsername) {
 			setUsername(storedUsername); // Set username if cookie exists
+			setShowModal(false);
 		} else {
 			setShowModal(true); // Show modal if cookie doesn't exist
 		}
