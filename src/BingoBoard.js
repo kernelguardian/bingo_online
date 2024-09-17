@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Import js-cookie
 
 const BingoBoard = () => {
 	const { id } = useParams(); // Access the dynamic parameter
@@ -13,6 +14,15 @@ const BingoBoard = () => {
 	const [completedColumns, setCompletedColumns] = useState(0);
 	const [completedDiagonals, setCompletedDiagonals] = useState(0);
 
+	// Check for username in cookies on component mount
+	useEffect(() => {
+		const storedUsername = Cookies.get('username'); // Get username from cookie
+		if (storedUsername) {
+			setUsername(storedUsername); // Set username if cookie exists
+		} else {
+			setShowModal(true); // Show modal if cookie doesn't exist
+		}
+	}, []);
 	// Fetch configuration data from Redis on component mount
 	useEffect(() => {
 		const fetchData = async () => {
@@ -66,6 +76,7 @@ const BingoBoard = () => {
 	const handleUsernameSubmit = (e) => {
 		e.preventDefault();
 		if (username.trim()) {
+			Cookies.set('username', username); // Save username to cookie
 			setShowModal(false);
 		}
 	};
