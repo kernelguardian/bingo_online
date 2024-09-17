@@ -1,37 +1,58 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateUniqueId } from './utils';
-// import { createClient } from 'redis';
+import './Home.css';
 
 function Home() {
-	// const redis = createClient();
-	// redis.on('error', (err) => console.log('Redis Client Error', err));
-	// redis.connect();
-	// console.log(process.env.REACT_APP_KV_URL);
-
 	const [maxNumberRange, setMaxNumberRange] = useState(75);
 	const [numberOfCells, setNumberOfCells] = useState(5);
+	const [errors, setErrors] = useState({
+		maxNumberRange: false,
+		numberOfCells: false,
+	});
 	const navigate = useNavigate();
 
-	const handleGenerate = () => {
-		const uid = generateUniqueId();
-
-		const url = `/bingo/${uid}`;
-		const payload = maxNumberRange + '_' + numberOfCells;
-		const redis_url = `${process.env.REACT_APP_KV_REST_API_URL}/set/${uid}/${payload}`;
-
-		console.log(redis_url);
-
-		fetch(redis_url, {
-			headers: {
-				Authorization: 'Bearer ' + process.env.REACT_APP_KV_REST_API_TOKEN,
-			},
-		})
-			.then((response) => response.json())
-			.then((data) => console.log(data));
-
-		navigate(url);
+	const validateInputs = () => {
+		const errors = {
+			maxNumberRange: false,
+			numberOfCells: false,
+		};
+		if (numberOfCells < 5) {
+			errors.numberOfCells = true;
+		}
+		if (numberOfCells * numberOfCells > maxNumberRange) {
+			errors.maxNumberRange = true;
+		}
+		setErrors(errors);
+		return !errors.maxNumberRange && !errors.numberOfCells;
 	};
+
+	const handleGenerate = () => {
+		if (validateInputs()) {
+			const uid = generateUniqueId();
+
+			const url = `/bingo/${uid}`;
+			const payload = maxNumberRange + '_' + numberOfCells;
+			const redis_url = `${process.env.REACT_APP_KV_REST_API_URL}/set/${uid}/${payload}`;
+
+			console.log(redis_url);
+
+			fetch(redis_url, {
+				headers: {
+					Authorization: 'Bearer ' + process.env.REACT_APP_KV_REST_API_TOKEN,
+				},
+			})
+				.then((response) => response.json())
+				.then((data) => console.log(data));
+
+			navigate(url);
+		}
+	};
+
+	const inputClass = (hasError) =>
+		`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
+			hasError ? 'border-red shake' : 'border-gray-300'
+		}`;
 
 	return (
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center'>
@@ -47,7 +68,7 @@ function Home() {
 						type='number'
 						value={maxNumberRange}
 						onChange={(e) => setMaxNumberRange(e.target.value)}
-						className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+						className={inputClass(errors.maxNumberRange)}
 					/>
 				</div>
 				<div className='mb-6'>
@@ -58,7 +79,7 @@ function Home() {
 						type='number'
 						value={numberOfCells}
 						onChange={(e) => setNumberOfCells(e.target.value)}
-						className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
+						className={inputClass(errors.numberOfCells)}
 					/>
 				</div>
 				<button
