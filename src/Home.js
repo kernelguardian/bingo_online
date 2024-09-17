@@ -37,11 +37,11 @@ function Home() {
 		<div className='min-h-screen bg-gray-100 flex items-center justify-center'>
 			<div className='bg-white shadow-md rounded-lg p-8 max-w-lg w-full'>
 				<h1 className='text-2xl font-bold mb-6 text-center'>
-					Create Bingo Game
+					Generate a new Bingo Game
 				</h1>
 				<div className='mb-4'>
 					<label className='block text-sm font-medium text-gray-700 mb-1'>
-						Max Number Range:
+						Numbers to use (eg 1-75):
 					</label>
 					<input
 						type='number'
@@ -52,7 +52,7 @@ function Home() {
 				</div>
 				<div className='mb-6'>
 					<label className='block text-sm font-medium text-gray-700 mb-1'>
-						Number of Cells:
+						Table Size (eg 5x5):
 					</label>
 					<input
 						type='number'
