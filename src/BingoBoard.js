@@ -134,9 +134,9 @@ const BingoBoard = () => {
 
 	// Generate headers for the Bingo board
 	const getHeaders = () => {
-		const headers = ['B', 'I', 'N', 'G', 'O'];
+		const headers = ['S', 'U', 'B', 'I', 'N'];
 		while (headers.length < numberOfCells) {
-			headers.push('O');
+			headers.push('N');
 		}
 		return headers;
 	};
